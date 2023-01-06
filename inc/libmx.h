@@ -5,9 +5,9 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <stdbool.h>
-#include <malloc/malloc.h>
+//#include <malloc/malloc.h>
 
-// Act: Utils pack
+//Act: Utils pack
 void mx_printchar(char c);
 void mx_print_unicode(wchar_t c);
 void mx_printstr(const char *s);
@@ -22,7 +22,7 @@ int mx_quicksort(char **arr, int left, int right);
 double mx_pow(double n, unsigned int pow);
 int mx_sqrt(int x);
 
-// Act: String pack
+//Act: String pack
 int mx_strlen(const char *s);
 void mx_swap_char(char *s1, char *s2);
 void mx_str_reverse(char *s);
@@ -48,17 +48,17 @@ char **mx_strsplit(char const *s, char c);
 char *mx_strjoin(const char *s1, const char *s2);
 char *mx_file_to_str(const char *filename);
 char *mx_replace_substr(const char *str, const char *sub, const char *replace);
-// int mx_read_line(char**lineptr, size_tbuf_size, chardelim, constintfd);
+//int mx_read_line(char**lineptr, size_tbuf_size, chardelim, constintfd);
 
-// Act: Memory pack
+//Act: Memory pack
 void *mx_memset(void *b, int c, size_t len);
-// void *mx_memcpy(void *restrict dst, const void *restrict src, size_t n);
-// void *mx_memccpy(void *restrict dst, const void *restrict src, int c, size_t n);
+//void *mx_memcpy(void *restrict dst, const void *restrict src, size_t n);
+//void *mx_memccpy(void *restrict dst, const void *restrict src, int c, size_t n);
 int mx_memcmp(const void *s1, const void *s2, size_t n);
 void *mx_memchr(const void *s, int c, size_t n);
 void *mx_memrchr(const void *s, int c, size_t n);
 void *mx_memmove(void *dst, const void *src, size_t len);
-void *mx_realloc(void *ptr, size_t new_size);
+//void *mx_realloc(void *ptr, size_t new_size);
 
 //Act: List pack
 typedef struct s_list
