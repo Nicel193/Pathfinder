@@ -1,16 +1,17 @@
 #include "../inc/pathfinder.h"
 
-static void print_error(int line, t_pathfinder_data data, char *str_line)
+static void print_error(int line, t_pathfinder_data data, char *str_line, t_list *nodes)
 {
     mx_printstr("error: line ");
     mx_printint(line);
     mx_printstr(" is not valid\n");
     free(str_line);
-    delete_pathfinder_data(data);
+    free(data.file_text);
+    delete_list_nodes(nodes);
     exit(-1);
 }
 
-static void create_node(char *str_line, int line, long int *sum_of_bridges, t_pathfinder_data data)
+static void create_node(t_list **nodes, char *str_line, int line, long int *sum_of_bridges, t_pathfinder_data data)
 {
     int first_element_len = mx_get_char_index(str_line, '-');
     char *first_element = mx_strndup(str_line, first_element_len);
@@ -18,7 +19,7 @@ static void create_node(char *str_line, int line, long int *sum_of_bridges, t_pa
     if (first_element == NULL || !mx_isword(first_element))
     {
         free(first_element);
-        print_error(line, data, str_line);
+        print_error(line, data, str_line, *nodes);
     }
 
     //-------------------------------------------------------------------------------------
@@ -30,7 +31,7 @@ static void create_node(char *str_line, int line, long int *sum_of_bridges, t_pa
     {
         free(first_element);
         free(second_element);
-        print_error(line, data, str_line);
+        print_error(line, data, str_line, *nodes);
     }
 
     //-------------------------------------------------------------------------------------
@@ -43,7 +44,7 @@ static void create_node(char *str_line, int line, long int *sum_of_bridges, t_pa
         free(first_element);
         free(second_element);
         free(third_element);
-        print_error(line, data, str_line);
+        print_error(line, data, str_line, *nodes);
     }
 
     //-------------------------------------------------------------------------------------
@@ -58,7 +59,7 @@ static void create_node(char *str_line, int line, long int *sum_of_bridges, t_pa
     new_node->edge_length = distance;
 
     free(third_element);
-    mx_push_back(data.nodes, new_node);
+    mx_push_back(nodes, (t_node *)new_node);
     error_sum_of_bridges_lengths((*sum_of_bridges) += distance, data, str_line);
 }
 
@@ -75,27 +76,27 @@ bool is_same_node(t_node *node_first, t_node *node_second)
     return false;
 }
 
-t_list **get_names_vertices(t_list *nodes, int *count)
+t_list *get_names_vertices(t_list *nodes, int *count)
 {
-    t_list **all_names_vertices = malloc(sizeof(t_list) * 5);
+    t_list *all_names_vertices = NULL;
     t_list *temp_nodes = nodes;
 
     while (temp_nodes != NULL)
     {
         t_node *node = (t_node *)(temp_nodes->data);
 
-        mx_push_back(all_names_vertices, node->first_vertex);
-        mx_push_back(all_names_vertices, node->second_vertex);
+        mx_push_back(&all_names_vertices, node->first_vertex);
+        mx_push_back(&all_names_vertices, node->second_vertex);
 
         temp_nodes = temp_nodes->next;
     }
 
-    t_list **names_vertices = malloc(sizeof(t_list));
-    t_list *temp_names = *all_names_vertices;
+    t_list *names_vertices = NULL;
+    t_list *temp_names = all_names_vertices;
 
     while (temp_names != NULL)
     {
-        t_list *name = *names_vertices;
+        t_list *name = names_vertices;
         while (name != NULL)
         {
             if (mx_strcmp(name->data, temp_names->data) == 0)
@@ -107,7 +108,7 @@ t_list **get_names_vertices(t_list *nodes, int *count)
         if (name == NULL)
         {
             (*count)++;
-            mx_push_back(names_vertices, (char *)temp_names->data);
+            mx_push_back(&names_vertices, (char *)temp_names->data);
         }
 
         temp_names = temp_names->next;
@@ -118,12 +119,12 @@ t_list **get_names_vertices(t_list *nodes, int *count)
     return names_vertices;
 }
 
-t_list **get_nodes(t_pathfinder_data data)
+t_list *get_nodes(t_pathfinder_data data)
 {
     long int sum_of_bridges = 0;
     int line = 1;
 
-    data.nodes = malloc(sizeof(t_list));
+    t_list *nodes = NULL;
 
     for (int i = 0; data.file_text[i] != '\0'; i++)
     {
@@ -147,12 +148,12 @@ t_list **get_nodes(t_pathfinder_data data)
 
         if (str_line == NULL)
         {
-            print_error(line, data, str_line);
+            print_error(line, data, str_line, nodes);
         }
 
         if (line > 1)
         {
-            create_node(str_line, line, &sum_of_bridges, data);
+            create_node(&nodes, str_line, line, &sum_of_bridges, data);
         }
 
         if (line_len != -1)
@@ -175,9 +176,9 @@ t_list **get_nodes(t_pathfinder_data data)
 
     if (line <= 2)
     {
-        print_error(line, data, NULL);
+        print_error(line, data, NULL, nodes);
     }
 
-    return data.nodes;
+    return nodes;
 }
 

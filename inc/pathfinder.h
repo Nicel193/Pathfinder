@@ -30,16 +30,16 @@ typedef struct s_part_path
 typedef struct s_pathfinder_data
 {
     char *file_text;
-    t_list **nodes;
-    t_list **names_vertices;
+    t_list *nodes;
+    t_list *names_vertices;
 } t_pathfinder_data;
 
 // File
 char *get_file_text(int argc, char const *argv[]);
 
 // Nodes(Part path)
-t_list **get_nodes(t_pathfinder_data data);
-t_list **get_names_vertices(t_list *nodes, int *count);
+t_list *get_nodes(t_pathfinder_data data);
+t_list *get_names_vertices(t_list *nodes, int *count);
 bool is_same_node(t_node *node_first, t_node *node_second);
 
 // Matrix
@@ -62,8 +62,8 @@ void error_sum_of_bridges_lengths(long int sum, t_pathfinder_data data, char *st
 void error_duplicate_bridges(t_list *nodes, t_pathfinder_data data);
 
 // Free memory
-void delete_list(t_list **list);
-void delete_list_nodes(t_list **list);
+void delete_list(t_list *list);
+void delete_list_nodes(t_list *list);
 void delete_node(t_node *node);
 void delete_matrix(int **graph, int n);
 void delete_pathfinder_data(t_pathfinder_data data);
