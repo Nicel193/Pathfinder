@@ -3,3 +3,6 @@
 ._.DS_Store
 *.o
 *.out
+*.a
+
+pathfinder

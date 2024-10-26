@@ -1,6 +1,19 @@
 #include "../inc/pathfinder.h"
+#include <time.h>
+#include <stdio.h>
+#include "main.h"
 
-int main(int argc, char const *argv[])
+double measureExecutionTime(void (*func)())
+{
+    clock_t start, end;
+    start = clock();
+
+    end = clock();
+
+    return ((double)(end - start)) / CLOCKS_PER_SEC;
+}
+
+void start_app(int argc, const char *argv[])
 {
     t_pathfinder_data data;
     int count_vertices = 0;
@@ -15,7 +28,19 @@ int main(int argc, char const *argv[])
     pathfinder(data.nodes, data.names_vertices, count_vertices);
 
     delete_pathfinder_data(data);
+}
+
+int main(int argc, char const *argv[])
+{
+    clock_t start, end;
+    start = clock();
+
+    start_app(argc, argv);
+
+    end = clock();
+
+    double cpu_time_used = ((double)(end - start) * 1000) / CLOCKS_PER_SEC;
+    printf("Execution time: %.2f ms\n", cpu_time_used);
 
     return 0;
 }
-
