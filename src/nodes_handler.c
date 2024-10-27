@@ -78,43 +78,33 @@ bool is_same_node(t_node *node_first, t_node *node_second)
 
 t_list *get_names_vertices(t_list *nodes, int *count)
 {
-    t_list *all_names_vertices = NULL;
-    t_list *temp_nodes = nodes;
+    t_list *names_vertices = NULL;
+    hash_set unique_vertices;
+    hash_set_init(&unique_vertices);
 
+    t_list *temp_nodes = nodes;
     while (temp_nodes != NULL)
     {
         t_node *node = (t_node *)(temp_nodes->data);
 
-        mx_push_back(&all_names_vertices, node->first_vertex);
-        mx_push_back(&all_names_vertices, node->second_vertex);
+        if (!hash_set_contains(&unique_vertices, node->first_vertex))
+        {
+            hash_set_add(&unique_vertices, node->first_vertex);
+            mx_push_back(&names_vertices, node->first_vertex);
+            (*count)++;
+        }
+
+        if (!hash_set_contains(&unique_vertices, node->second_vertex))
+        {
+            hash_set_add(&unique_vertices, node->second_vertex);
+            mx_push_back(&names_vertices, node->second_vertex);
+            (*count)++;
+        }
 
         temp_nodes = temp_nodes->next;
     }
 
-    t_list *names_vertices = NULL;
-    t_list *temp_names = all_names_vertices;
-
-    while (temp_names != NULL)
-    {
-        t_list *name = names_vertices;
-        while (name != NULL)
-        {
-            if (mx_strcmp(name->data, temp_names->data) == 0)
-                break;
-
-            name = name->next;
-        }
-
-        if (name == NULL)
-        {
-            (*count)++;
-            mx_push_back(&names_vertices, (char *)temp_names->data);
-        }
-
-        temp_names = temp_names->next;
-    }
-
-    delete_list(all_names_vertices);
+    hash_set_delete(&unique_vertices);
 
     return names_vertices;
 }

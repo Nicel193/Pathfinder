@@ -51,4 +51,3 @@ void error_duplicate_bridges(t_list *nodes, t_pathfinder_data data)
         current_nodes = current_nodes->next;
     }
 }
-

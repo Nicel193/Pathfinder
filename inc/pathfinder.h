@@ -68,4 +68,21 @@ void delete_node(t_node *node);
 void delete_matrix(int **graph, int n);
 void delete_pathfinder_data(t_pathfinder_data data);
 
+//Hash set
+typedef struct hash_set_entry {
+    char *key;
+    bool is_occupied;
+} hash_set_entry;
+
+typedef struct hash_set {
+    hash_set_entry *entries;
+    size_t capacity;
+    size_t size;
+} hash_set;
+
+void hash_set_init(hash_set *set);
+bool hash_set_contains(hash_set *set, const char *key);
+void hash_set_add(hash_set *set, const char *key);
+void hash_set_delete(hash_set *set);
+
 #endif
