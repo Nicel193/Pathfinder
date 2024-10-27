@@ -119,6 +119,11 @@ t_list *get_names_vertices(t_list *nodes, int *count)
     return names_vertices;
 }
 
+char *get_free_line(int line_len, char *correct_line, char *incorrect_line)
+{
+    return line_len != -1 ? correct_line : incorrect_line;
+}
+
 t_list *get_nodes(t_pathfinder_data data)
 {
     long int sum_of_bridges = 0;
@@ -129,22 +134,13 @@ t_list *get_nodes(t_pathfinder_data data)
     for (int i = 0; data.file_text[i] != '\0'; i++)
     {
         int line_len = mx_get_char_index(&(data.file_text)[i], '\n');
-
         char *incorrect_line = mx_strndup(&(data.file_text)[i], (mx_strlen(data.file_text) - i));
         char *correct_line = mx_strndup(&(data.file_text)[i], line_len);
 
-        char *str_line;
+        char *line_to_free = (line_len != -1) ? incorrect_line : correct_line;
+        char *str_line = (line_len != -1) ? correct_line : incorrect_line;
 
-        if (line_len != -1)
-        {
-            str_line = correct_line;
-            free(incorrect_line);
-        }
-        else
-        {
-            str_line = incorrect_line;
-            free(correct_line);
-        }
+        free(line_to_free);
 
         if (str_line == NULL)
         {
@@ -156,14 +152,7 @@ t_list *get_nodes(t_pathfinder_data data)
             create_node(&nodes, str_line, line, &sum_of_bridges, data);
         }
 
-        if (line_len != -1)
-        {
-            free(correct_line);
-        }
-        else
-        {
-            free(incorrect_line);
-        }
+        free(get_free_line(line_len, correct_line, incorrect_line));
 
         line++;
         i += line_len;
@@ -181,4 +170,3 @@ t_list *get_nodes(t_pathfinder_data data)
 
     return nodes;
 }
-

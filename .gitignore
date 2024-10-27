@@ -4,5 +4,6 @@
 *.o
 *.out
 *.a
+*.txt
 
 pathfinder

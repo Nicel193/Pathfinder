@@ -8,11 +8,10 @@ void cleanup_resources(t_list *names_verticesdup, int **graph, int count_vertice
 
 void pathfinder(t_list *nodes, t_list *names_vertices, int count_vertices)
 {
+    int n = count_vertices;
     int **graph = create_matrix(nodes, names_vertices, count_vertices);
     t_list *names_verticesdup = mx_listdup(names_vertices);
-
     t_list *temp = names_verticesdup;
-    int n = count_vertices;
 
     while (n != 1)
     {

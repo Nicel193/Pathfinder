@@ -11,21 +11,29 @@ static int min_distance(int dist[], bool sptSet[], int n)
     return min_index;
 }
 
-static void find(t_part_path path[], int **graph, char *current_name, t_list *names_vertices, int current_distance, int n, int u, int total)
+static void find(t_part_path path[], int **graph, char *current_name,
+                 t_list *names_vertices, int current_distance, int n, int u, int total)
 {
     for (int i = 0; i < n; i++)
     {
-        if (graph[u][i] != 0 && (total + graph[u][i]) == current_distance && mx_strcmp(mx_get_value_from_index(names_vertices, i), current_name) == 0)
+        if (graph[u][i] != 0)
         {
-            add_to_path(path, mx_get_value_from_index(names_vertices, i), graph[u][i]);
-            print_path(path, current_name, current_distance);
-            delete_from_path(path);
-            continue;
-        }
-        if (graph[u][i] != 0 && (total + graph[u][i]) < current_distance)
-        {
-            add_to_path(path, mx_get_value_from_index(names_vertices, i), graph[u][i]);
-            find(path, graph, current_name, names_vertices, current_distance, n, i, total + graph[u][i]);
+            int newTotal = total + graph[u][i];
+            char *vertexName = mx_get_value_from_index(names_vertices, i);
+
+            if (newTotal == current_distance && mx_strcmp(vertexName, current_name) == 0)
+            {
+                add_to_path(path, vertexName, graph[u][i]);
+                print_path(path, current_name, current_distance);
+                delete_from_path(path);
+                continue;
+            }
+
+            if (newTotal < current_distance)
+            {
+                add_to_path(path, vertexName, graph[u][i]);
+                find(path, graph, current_name, names_vertices, current_distance, n, i, newTotal);
+            }
         }
     }
 
@@ -44,7 +52,6 @@ static void find_similar_pathway(int **graph, char *current_name, t_list *names_
 void find_pathway(t_list *names_vertices, int **graph, int n, int print_count)
 {
     int dist[n];
-
     bool sptSet[n];
 
     for (int i = 0; i < n; i++)
